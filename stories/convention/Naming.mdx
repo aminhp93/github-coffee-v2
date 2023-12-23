@@ -1,0 +1,51 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Convention/Naming" />
+
+# Naming Convention
+
+### 1. Use type instead of interface. If needed, use interface.
+
+```tsx
+✅ Ok
+type User = {
+  name: string;
+  age: number;
+};
+
+❌ Not Ok
+interface User {
+  name: string;
+  age: number;
+}
+
+```
+
+### 2. Use simple Props and es6 const
+
+```tsx
+
+✅ Ok
+type Props = {
+  title?: string;
+};
+
+const Home = (props: Props) => {
+  return <div>Home</div>;
+};
+
+export default Home;
+
+
+❌ Not Ok
+type HomeProps = {
+  title?: string;
+};
+
+const Home = (props: HomeProps) => {
+  return <div>Home</div>;
+};
+
+export default Home;
+
+```

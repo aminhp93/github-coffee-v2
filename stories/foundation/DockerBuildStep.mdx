@@ -1,0 +1,72 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Foundation/Docker build step" />
+
+# Docker build step
+
+### 1. Create Dockerfile
+
+```js
+FROM node:20 as builder
+WORKDIR /app
+COPY . ./
+RUN yarn
+RUN yarn build
+RUN yarn export
+
+FROM nginx
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/out /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+### 2. Run
+
+`docker build -t [name-image]:dev .`
+
+Example: `docker build -t piscada/webpmp-v5-items-bas:dev .`
+
+### 3. Create deployment folder
+
+```js
+version: '2.4'
+volumes:
+nodered-config-volume:
+nginx-config-volume:
+services:
+
+webpmp-v5-widgets-basic:
+image: piscada/webpmp-v5-widgets-basic:dev
+restart: unless-stopped
+tty: true
+stdin_open: true
+labels:
+service.name: "webpmp-v5-widgets-basic"
+volumes: - nginx-config-volume:/etc/nginx/conf.d
+expose: - "3001"
+ports: - "3001:3001"
+
+webpmp-v5-items-basic:
+image: piscada/webpmp-v5-items-basic:dev
+restart: unless-stopped
+tty: true
+stdin_open: true
+labels:
+service.name: "webpmp-v5-items-basic"
+volumes: - nginx-config-volume:/etc/nginx/conf.d
+expose: - "30020"
+ports: - "30020:30020"
+
+webpmp-v5-items-bas:
+image: piscada/webpmp-v5-items-bas:dev
+restart: unless-stopped
+tty: true
+stdin_open: true
+labels:
+service.name: "webpmp-v5-items-bas"
+volumes: - nginx-config-volume:/etc/nginx/conf.d
+expose: - "30021"
+ports: - "30021:30021"
+
+```
