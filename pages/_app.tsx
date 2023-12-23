@@ -68,23 +68,23 @@ const App = (props: Props) => {
 
   return (
     <CacheProvider value={emotionCache}>
-      {/* <AuthProvider> */}
-      <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-        <SettingsConsumer>
-          {({ settings }: SettingsProps) => {
-            return (
-              <ThemeComponent settings={settings}>
-                <NotiProvider>
-                  {/* <Guard authGuard={authGuard} guestGuard={guestGuard}> */}
-                  {getLayout(<Component {...pageProps} />)}
-                  {/* </Guard> */}
-                </NotiProvider>
-              </ThemeComponent>
-            );
-          }}
-        </SettingsConsumer>
-      </SettingsProvider>
-      {/* </AuthProvider> */}
+      <AuthProvider>
+        <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+          <SettingsConsumer>
+            {({ settings }: SettingsProps) => {
+              return (
+                <ThemeComponent settings={settings}>
+                  <NotiProvider>
+                    <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                      {getLayout(<Component {...pageProps} />)}
+                    </Guard>
+                  </NotiProvider>
+                </ThemeComponent>
+              );
+            }}
+          </SettingsConsumer>
+        </SettingsProvider>
+      </AuthProvider>
     </CacheProvider>
   );
 };
